@@ -1,0 +1,21 @@
+IN 00;
+MOV B,A;
+
+IN 01;
+MOV C,A
+
+SUB B;
+
+JZ CERO;
+  JP POSITIVO:
+    MOV A,C;
+    OUT 03;
+HLT;
+
+CERO: MVI A FF;
+  OUT 03;
+HLT;
+
+POSITIVO: MOV A,B:
+  OUT 03;
+HLT;

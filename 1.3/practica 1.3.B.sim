@@ -1,0 +1,42 @@
+MVI A 80;
+OUT 00;
+
+MVI B 80;
+MVI C 01;
+
+DERECHA: RRC;
+    OUT 00;
+    CMP C;
+    JZ ABAJO;
+    JMP DERECHA;
+
+ABAJO: MOV D,A;
+    MVI A,00;
+    OUT 00;
+    MOV A,D;
+    OUT 01;
+    MOV D,A;
+    MVI A,00;
+    OUT 01;
+    MOV A,D;
+    OUT 02;
+
+IZQUIERDA:RLC;
+   OUT 02;
+   CMP B;
+   JZ ARRIBA;
+   JMP IZQUIERDA;
+
+ARRIBA: MOV D,A;
+    MVI A,00;
+    OUT 02;
+    MOV A,D;
+    OUT 01;
+    MOV D,A;
+    MVI A,00;
+    OUT 01;
+    MOV A,D;
+    OUT 00;
+    JMP DERECHA;
+
+HLT;

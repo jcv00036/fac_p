@@ -1,0 +1,54 @@
+IN 00;
+MOV B,A;
+
+IN 01;
+MOV C,A;
+
+IN 02;
+MOV D,A;
+
+IN 03;
+MOV E,A;
+
+
+MOV A,B;
+CMP C; 
+JC CMAYOR;
+
+MOV H,B;
+MOV B,C;
+JMP COMPARACION2;
+
+CMAYOR: MOV H,C;
+
+  COMPARACION2: MOV A,D; 
+    CMP E;
+    JC EMAYOR;
+
+    MOV L, D;
+    MOV C,E;
+    JMP COMPARACION3;
+
+     EMAYOR: MOV L,E;
+       MOV C,D;
+
+       COMPARACION3: MOV A,H; 
+         CMP L;
+         JC LMAYOR;
+
+         OUT 04;
+JMP COMPARACION4;
+
+LMAYOR: MOV A,L;
+  OUT 04;
+
+COMPARACION4: MOV A,B; 
+  CMP C;
+  JC BMENOR:
+
+  MOV A, C;
+  OUT 05;
+HLT;
+
+BMENOR: OUT 05;
+HLT;

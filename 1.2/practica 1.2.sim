@@ -1,0 +1,23 @@
+in 01:
+mov b,a;
+
+in 02;
+mov c,a;
+
+in 00;
+dcr a;
+
+mov a,b;
+jz suma;
+sub c;
+jm restaNeg;
+out 03;
+hlt;
+
+suma: add c;
+out 03;
+hlt;
+
+restaNeg: mvi a ff;
+out 03;
+hlt;
