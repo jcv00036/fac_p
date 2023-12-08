@@ -1,0 +1,16 @@
+@NEXT 0100
+
+MVI L, 00
+MVI C,80
+
+BUCLE:MOV A,M
+    ADD D
+    JPE PARIDAD
+        ADD C
+        MOV M,A   
+    PARIDAD:INR L
+    IN 00    
+    CMP L
+    JNZ BUCLE
+
+HLT;

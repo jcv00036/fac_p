@@ -1,0 +1,37 @@
+;El esquema de registros en este programa funciona tal que:
+;* B es el contador del bucle(ascendente)
+;* C es el número de elementos de la tabla (y número máximo de iteraciones)
+;* D es el número que estabamos buscando
+;* E es el número de iteracione
+;* HL es la dirección de memoria del elemento de la tabla que estamos comparando.
+
+MVI B,00;
+IN 00
+MOV C,A;
+LXI H,00FE
+IN 01;
+MOV D,A;
+
+;El bucle funciona tal que así:
+;* Se incrementa en 1 el contador
+;* Se compara el valor almacenado en M con D. Si son iguales se muestra el contador (la posición relativa en la tabla) en el puerto E/S 02h y se incremente el número de coincidencias (E) en 1
+;* Si no son iguales o si ya se ejecutado la secuencia de actualización de información en caso de si serlo, se incrementa en 1 la dirección de memoria que estamos buscando y se compara el contador con el número de elementos de la lista. Si no son iguales se vuelve a ejecutar el bucle. Si lo son, se sale del bucle y comienza la secuencia de fin.
+BUCLE:INR B;
+MOV A,M;
+CMP D;
+JNZ NOESIGUAL;
+MOV A,B;
+OUT 02;
+INR E;
+NOESIGUAL: INX H
+MOV A,B
+CMP C;
+JNZ BUCLE
+
+;Cuando se acaba el bucle, comprobamos que haya mas de 0 coincidencias, en caso de no haberlas, se muestra FF en el puerto 02.
+MOV A,E;
+DCR A;
+JP ACABAR:
+MVI A,FF;
+OUT 02;
+ACABAR: HLT

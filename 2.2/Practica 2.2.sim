@@ -1,0 +1,25 @@
+LDA 0100; CARGAR EL VALOR TOTAL EN EL ACUMULADOR
+MOV B,A; B = NUMERO TOTAL DE DATOS
+LXI H,0100;
+MVI D, FF;
+MVI E,00;
+
+BUCLE: INR L;
+    JNZ SEGUIR;
+    INR H;
+    SEGUIR: MOV A,D; D es el registro donde se almacena el menor
+    CMP M;
+    JC MAYOR;
+    MOV D,M;
+    MAYOR: MOV A,E;E es el registro donde se almacena el mayor
+    CMP M;
+    JNC MENOR;
+    MOV E,M;
+    MENOR: DCR B;
+    JNZ BUCLE;
+
+MOV A,D;
+OUT 00;
+MOV A,E;
+OUT 01;
+HLT;

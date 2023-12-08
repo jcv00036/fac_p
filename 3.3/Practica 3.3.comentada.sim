@@ -1,0 +1,64 @@
+;El esquema de registros en este programa funciona tal que:
+;* B es el número a buscar
+;* C es el número de coincidencias
+;* DE es la dirección de memoria del primer elemento
+;* HL es la dirección de memoria del último elemento
+
+;Se cargan las direcciones de memoria en los registros que se les han asignado
+LDA 0100
+MOV E A
+LDA 0101
+MOV D A
+LDA 0102
+MOV L A
+LDA 0103
+MOV H A
+
+;Comprobar que la dirección de inicio no sea igual o menor que 0x0103. Se hará de la siguiente forma:
+;* Se compara la parte más significativa de la dirección con 01, si es menor ya sabemos que es menor y ejecutamos la secuencia de error. Si es mayor ya sabemos que no solapa la información de las direcciones de memoria.
+;* Si es igual, comparamos E con 04. Si es menor ejecutamos la secuencia de error, de otro modo sabemos que la dirección es válida y continuamos con la ejecución.                          
+MOV A,D;
+CPI 01;
+JC ERROR;
+JNZ NOSOLAPA;
+MOV A,E;
+CPI 04;
+JC ERROR;
+
+;Ahora queremos comparar que la dirección de fin no sea igual o inferior a la dirección de inicio. Para ello ejecutamos los siguientes pasos (es el mismo algoritmo que antes):
+;* Se comparan las partes mas significativas de las direcciones. Si la de fin es menor, se ejecuta la secuencia de error. Si es mayor, se continua con la ejecución saltando más comprobaciones. Si es igual, comprobamos las partes menos significativas.
+;* Se comparan las partes menos significativas. Si la de fin es menor o igual a la de inicio, se ejecuta la secuencia de error. De otro modo se continúa con el programa.
+NOSOLAPA: MOV A H;
+CMP D;
+JC ERROR;
+JNZ SINERRORES;
+MOV A, L;
+CMP E;
+JC ERROR;
+JZ ERROR;
+
+SINERRORES:MVI C 00
+MVI B 00
+IN 00
+MOV B A
+DCX D
+
+RECORRER:INX D
+    LDAX D
+    CMP B
+    JNZ NOCOINC
+         INR C
+    NOCOINC:MOV A D
+    CMP H
+    JNZ SEGUIR
+        MOV A E
+        CMP L
+        JZ SALIR
+SEGUIR:JMP RECORRER
+
+SALIR:MOV A C
+OUT 01
+HLT
+ERROR:MVI A FF
+OUT 01
+HLT

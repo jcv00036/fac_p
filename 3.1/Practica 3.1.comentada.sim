@@ -1,0 +1,39 @@
+;Asignación de registros:
+;* B es el divisor
+;* C es el cociente
+;* A actua como resto de cada división
+
+MVI C 00
+
+LDA 0101
+MOV B,A 
+
+ADI 00
+JZ DIVISOR0 ; Comprobar si el divisor es 0, en tal caso ejecutar el codigo que muestra que ha ocurrido un error
+
+LDA 0100
+ADI 00
+JZ 0/ALGO ; Comprobar si el dividendo es 0, en tal caso ejecutar el código que muestra un cociente y resto 0 .
+
+;En este bucle el divisor y el resto se comparan. Si el resto es mayor, se le resta el divisor y se incrementa en 1 el cociente. Si es menor, el programa pasa al código de fin en el que se muestran los resultados.
+MAYOR: CMP B
+    JC FIN
+    SUB B
+    INR C    
+JMP MAYOR
+
+FIN:STA 0103
+MOV A,C
+STA 0102
+HLT
+
+;El código de error para la indeterminación N/0 hace que el cociente y el resto sean FF. Esto es fácilmente detectable como error ya que al trabajar con numeros en el rango [0,255] es imposible obtener estos resultados mediante la división.
+DIVISOR0:MVI A FF
+STA 0102
+STA 0103
+HLT
+
+0/ALGO: MVI A 00
+STA 0102
+STA 0103
+HLT
