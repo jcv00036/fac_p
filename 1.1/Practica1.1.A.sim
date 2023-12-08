@@ -1,0 +1,25 @@
+;el programa muestra el numero mas grande de dos numeros dados
+IN 00;
+MOV B,A; Leer el puerto E/S 00 y guardar su valor en el registro B
+
+IN 01;
+MOV C,A; Leer el puerto E/S 01 y guardar su valor en el registro C
+
+SUB B; Restar a B(valor del puerto 00) el acumulador (valor del puerto 01) 
+
+JZ CERO; Si el resultado es cero, saltar
+JP POSITIVO; Si el resultado es positivo, saltar
+
+;si no, (el resultado es negativo luego C era mas grande), mostrar C en pantalla
+MOV A,C;
+OUT 03;
+HLT;
+
+CERO: MVI A FF; Si el resultado es 0, mostrar FF porque ambos numeros son iguales
+OUT 03;
+HLT;
+
+POSITIVO: MOV A,B; Si el resultado es positivo, mostrar B porque es mas grande
+OUT 03;
+
+HLT;
