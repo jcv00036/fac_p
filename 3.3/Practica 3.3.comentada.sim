@@ -37,12 +37,18 @@ CMP E;
 JC ERROR;
 JZ ERROR;
 
+;Si las comprobaciones no han arrojado ningún error, se carga el resto de datos (descrita su ubicación en el esquema de registros).
 SINERRORES:MVI C 00
-MVI B 00
 IN 00
 MOV B A
+
+;Se decrementa DE en uno para asegurar que el bucle comprueba todos los casos
 DCX D
 
+;Este bucle comprueba las coincidencias que hay entre el numero que buscamos y los valores almacenados en la tabla. Funciona tal que así:
+;* Incrementa la dirección de memoria de la que se cargan los valores (DE)
+;* Se compara el valor almacenado en DE con el número que estabamos buscando. Si es igual, se incrementa en 1 las coincidencias (C)
+;* Si no coinciden o si ya se ha acabado la secuencia de coincidencia, se comparan ambas direcciones de memoria (DE y HL) con el algoritmo que ya habíamos usado anteriormente. Si las direcciones son iguales, se saldrá del bucle. En caso contrario, se vuelve a ejecutar.
 RECORRER:INX D
     LDAX D
     CMP B
@@ -56,9 +62,12 @@ RECORRER:INX D
         JZ SALIR
 SEGUIR:JMP RECORRER
 
+;Una vez terminado el bucle, se muestra en 01h el número de coincidencias
 SALIR:MOV A C
 OUT 01
 HLT
+
+;Si en cambio se llamó a una secuencia de error, se muestra FF en 01h.
 ERROR:MVI A FF
 OUT 01
 HLT
