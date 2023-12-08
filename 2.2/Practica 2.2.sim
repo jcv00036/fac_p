@@ -1,0 +1,32 @@
+LDA 0100; 
+MOV B,A;
+
+LXI H,0100;
+MVI D, FF;
+MVI E,00;
+
+BUCLE: INR L;
+
+    JNZ SEGUIR;
+        INR H;
+    SEGUIR: MOV A,D; 
+
+    CMP M;
+
+    JC MAYOR;
+        MOV D,M;
+    MAYOR: MOV A,E;
+
+    CMP M;
+
+    JNC MENOR;
+        MOV E,M;
+    MENOR: DCR B;
+
+JNZ BUCLE;
+
+MOV A,D;
+OUT 00;
+MOV A,E;
+OUT 01;
+HLT;
